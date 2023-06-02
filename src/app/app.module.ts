@@ -3,17 +3,19 @@ import { AppService } from './app.service';
 import { AppController } from './app.controller';
 
 import { ConfigModule } from '@nestjs/config';
-import { MongooseModule } from '@nestjs/mongoose';
+// import { MongooseModule } from '@nestjs/mongoose';
 
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
+import { DatabaseModule } from './database/database.module';
 
-import MongooseConfiguration from 'src/config/mongoose.config';
+// import MongooseConfiguration from 'src/config/mongoose.config';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
-    MongooseModule.forRootAsync(MongooseConfiguration),
+    DatabaseModule,
+    // MongooseModule.forRootAsync(MongooseConfiguration),
     AuthModule,
     UsersModule,
   ],
