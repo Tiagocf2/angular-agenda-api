@@ -1,25 +1,25 @@
-import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
+// import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
 import md5 from 'md5';
 import { Document } from 'mongoose';
 
-@Schema({
-  // toJSON: { virtuals: true },
-  toObject: { virtuals: true },
-})
+// @Schema({
+//   // toJSON: { virtuals: true },
+//   toObject: { virtuals: true },
+// })
 export class User extends Document {
-  @Prop({ isRequired: true })
+  // @Prop({ isRequired: true })
   username: string;
 
-  @Prop({ isRequired: true })
+  // @Prop({ isRequired: true })
   hashedPassword: string;
 
-  @Prop({ isRequired: true })
+  // @Prop({ isRequired: true })
   email: string;
 
-  @Prop({ isRequired: true })
+  // @Prop({ isRequired: true })
   name: string;
 
-  @Prop()
+  // @Prop()
   address: string;
 
   set password(pwd: string) {
@@ -35,16 +35,16 @@ export class User extends Document {
   }
 }
 
-export const UserSchema = SchemaFactory.createForClass(User);
+// export const UserSchema = SchemaFactory.createForClass(User);
 
-UserSchema.virtual('password')
-  .set(function (pwd: string) {
-    const hashed = md5(pwd);
-    this.set({ hashedPassword: hashed });
-  })
-  .get(function () {
-    return this.hashedPassword;
-  });
+// UserSchema.virtual('password')
+//   .set(function (pwd: string) {
+//     const hashed = md5(pwd);
+//     this.set({ hashedPassword: hashed });
+//   })
+//   .get(function () {
+//     return this.hashedPassword;
+//   });
 
 // UserSchema.method('comparePassword', function (pwd: string): boolean {
 //   return this.hashedPassword === md5(pwd);
