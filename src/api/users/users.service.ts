@@ -2,17 +2,17 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './entities/user.schema';
-// import { InjectModel } from '@nestjs/mongoose';
+import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
 @Injectable()
 export class UsersService {
-  // constructor(@InjectModel(User.name) private userModel: Model<User>) {}
+  constructor(@InjectModel(User.name) private userModel: Model<User>) {}
 
   async create(createUserDto: CreateUserDto) {
-    // const newUser = new this.userModel();
+    const newUser = new this.userModel();
     // await newUser.save();
-    // console.log('NEW', newUser);
+    console.log('NEW', newUser);
 
     console.log('PTA');
     return 'oi';
@@ -32,9 +32,9 @@ export class UsersService {
     if (!id && !username) throw new NotFoundException();
     let user: User;
     if (id) {
-      // user = await this.userModel.findById(id).exec();0
+      user = await this.userModel.findById(id).exec();
     } else {
-      // user = await this.userModel.findOne({ username }).exec();
+      user = await this.userModel.findOne({ username }).exec();
     }
     if (!user) throw new NotFoundException();
 
