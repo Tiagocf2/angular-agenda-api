@@ -8,6 +8,7 @@ import { RouterModule } from '@nestjs/core';
 
 import { AuthModule } from './api/auth/auth.module';
 import { UsersModule } from './api/users/users.module';
+import { AssistantModule } from './api/assistant/assistant.module';
 
 import MongooseConfiguration from 'src/core/config/mongoose.config';
 
@@ -28,7 +29,12 @@ import MongooseConfiguration from 'src/core/config/mongoose.config';
         children: [
           {
             path: ':id',
-            children: [],
+            children: [
+              {
+                path: 'chat',
+                module: AssistantModule,
+              },
+            ],
           },
         ],
       },
