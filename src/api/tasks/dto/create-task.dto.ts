@@ -1,11 +1,9 @@
 import {
   ArrayNotEmpty,
-  IsDate,
   IsDateString,
   IsNotEmpty,
   IsNumber,
   IsOptional,
-  MinDate,
 } from 'class-validator';
 import { TaskPriority } from '../enums/task-priority.enum';
 
