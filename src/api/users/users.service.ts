@@ -4,18 +4,20 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './entities/user.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { UsersRepository } from './users.repository';
+import md5 from 'md5';
 
 @Injectable()
 export class UsersService {
-  constructor(@InjectModel(User.name) private userModel: Model<User>) {}
+  constructor(
+    @InjectModel(User.name) private userModel: Model<User>,
+    private usersRepo: UsersRepository,
+  ) {}
 
   async create(createUserDto: CreateUserDto) {
-    const newUser = new this.userModel();
-    // await newUser.save();
-    console.log('NEW', newUser);
-
-    console.log('PTA');
-    return 'oi';
+    createUserDto.password = md5(createUserDto.password);
+    //TODO: tratar erros
+    await this.usersRepo.create(createUserDto);
   }
 
   findAll() {
@@ -32,9 +34,9 @@ export class UsersService {
     if (!id && !username) throw new NotFoundException();
     let user: User;
     if (id) {
-      user = await this.userModel.findById(id).exec();
+      user = await this.usersRepo.findById(id);
     } else {
-      user = await this.userModel.findOne({ username }).exec();
+      user = await this.usersRepo.findByUsername(username);
     }
     if (!user) throw new NotFoundException();
 
@@ -42,6 +44,6 @@ export class UsersService {
   }
 
   update(id: string, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+    return this.usersRepo.update(id, updateUserDto);
   }
 }
