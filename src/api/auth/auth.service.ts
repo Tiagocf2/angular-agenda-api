@@ -1,7 +1,5 @@
 import {
   ConflictException,
-  HttpException,
-  HttpStatus,
   Injectable,
   NotFoundException,
   UnauthorizedException,
@@ -10,6 +8,7 @@ import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { SignupDto } from './dto/signup.dto';
 import { User } from '../users/entities/user.schema';
+const md5 = require('md5');
 
 @Injectable()
 export class AuthService {
@@ -21,7 +20,7 @@ export class AuthService {
   async signin(username: string, pwd: string) {
     // Throws NotFoundException
     const user = await this.usersService.findOne({ username });
-    if (!user.comparePassword(pwd)) throw new UnauthorizedException();
+    if (user.password !== md5(pwd)) throw new UnauthorizedException();
     const payload = { id: user.id, username: user.username };
     return await this.jwtService.signAsync(payload);
   }

@@ -36,6 +36,7 @@ export class AuthController {
           HttpStatus.BAD_REQUEST,
         );
       }
+      throw error;
     }
   }
 
@@ -51,7 +52,6 @@ export class AuthController {
         address: user.address,
       };
     } catch (error) {
-      console.error(error);
       if (error instanceof ConflictException) {
         throw new HttpException(
           {
@@ -60,6 +60,7 @@ export class AuthController {
           HttpStatus.BAD_REQUEST,
         );
       }
+      throw error;
     }
   }
 }

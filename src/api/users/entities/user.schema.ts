@@ -1,6 +1,5 @@
 import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
-const md5 = require('md5');
 
 @Schema()
 export class User extends Document {
@@ -18,10 +17,6 @@ export class User extends Document {
 
   @Prop()
   address: string;
-
-  comparePassword(pwd: string) {
-    return this.password === md5(pwd);
-  }
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
