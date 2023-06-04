@@ -3,16 +3,18 @@ import {
   MongooseModuleAsyncOptions,
   MongooseModuleFactoryOptions,
 } from '@nestjs/mongoose';
+import { Environment } from './environment.config';
 
 const staticOptions: MongooseModuleFactoryOptions = {};
 
 const MongooseConfiguration: MongooseModuleAsyncOptions = {
   imports: [ConfigModule],
   useFactory: async (configService: ConfigService) => {
-    console.info('Mongoose URI:', configService.get<string>('DATABASE_URI'));
+    const uri = configService.get<string>(Environment.DATABASE_URI);
+    console.info('Mongoose URI:', uri);
     return {
       ...staticOptions,
-      uri: configService.get<string>('DATABASE_URI'),
+      uri,
     };
   },
   inject: [ConfigService],
