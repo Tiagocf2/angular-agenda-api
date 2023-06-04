@@ -1,9 +1,12 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { TaskPriority } from '../enums/task-priority.enum';
 import { TaskStatus } from '../enums/task-status.enum';
+import { Document, Schema as MongooseSchema } from 'mongoose';
 
-@Schema()
+@Schema({ timestamps: true })
 export class Task {
+  _id: MongooseSchema.Types.ObjectId;
+
   @Prop({ required: true })
   title: string;
 

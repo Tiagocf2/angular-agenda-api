@@ -8,10 +8,13 @@ import {
   Delete,
   HttpCode,
   HttpStatus,
+  NotFoundException,
+  HttpException,
 } from '@nestjs/common';
 import { TasksService } from './tasks.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
+import { Task } from './entities/task.schema';
 
 @Controller()
 export class TasksController {
@@ -19,29 +22,34 @@ export class TasksController {
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  create(@Body() createTaskDto: CreateTaskDto) {
-    console.log('hey');
-    // return this.tasksService.create(createTaskDto);
+  async create(@Body() createTaskDto: CreateTaskDto) {
+    return await this.tasksService.create(createTaskDto);
   }
 
   @Get()
   findAll() {
-    console.log('yo');
     return this.tasksService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.tasksService.findOne(+id);
+  async findOne(@Param('id') id: string) {
+    try {
+      return await this.tasksService.findOne(id);
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw new HttpException('Task not found', HttpStatus.NOT_FOUND);
+      }
+      throw error;
+    }
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateTaskDto: UpdateTaskDto) {
-    return this.tasksService.update(+id, updateTaskDto);
+    return this.tasksService.update(id, updateTaskDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.tasksService.remove(+id);
+    return this.tasksService.remove(id);
   }
 }
