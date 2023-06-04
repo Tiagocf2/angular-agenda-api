@@ -7,6 +7,7 @@ import {
   HttpStatus,
   NotFoundException,
   Post,
+  Req,
   UnauthorizedException,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
@@ -14,17 +15,23 @@ import { SigninDto } from './dto/signin.dto';
 import { SignupDto } from './dto/signup.dto';
 import { IsPublic } from 'src/common/decorators';
 
-@Controller('auth')
+@Controller()
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @IsPublic()
   @Post('signin')
   @HttpCode(HttpStatus.OK)
-  async signin(@Body() body: SigninDto) {
+  async signin(@Body() body: SigninDto, @Req() request: Request) {
     try {
-      const token = await this.authService.signin(body.username, body.password);
-      return { access_token: token };
+      const payload = await this.authService.signin(
+        body.username,
+        body.password,
+      );
+      return {
+        access_token: payload.token,
+        id: payload.user.id,
+      };
     } catch (error) {
       if (
         error instanceof NotFoundException ||
