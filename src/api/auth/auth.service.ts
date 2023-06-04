@@ -9,6 +9,7 @@ import {
 import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { SignupDto } from './dto/signup.dto';
+import { User } from '../users/entities/user.schema';
 
 @Injectable()
 export class AuthService {
@@ -25,15 +26,13 @@ export class AuthService {
     return await this.jwtService.signAsync(payload);
   }
 
-  async signup(signupDto: SignupDto): Promise<void> {
+  async signup(signupDto: SignupDto): Promise<User> {
     try {
       await this.usersService.findOne({ username: signupDto.username });
-      console.log('deu erro');
       throw new ConflictException();
     } catch (error) {
       if (!(error instanceof NotFoundException)) throw error;
     }
-    console.log('ALSDAOSD');
-    await this.usersService.create(signupDto);
+    return await this.usersService.create(signupDto);
   }
 }

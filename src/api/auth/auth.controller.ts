@@ -43,11 +43,20 @@ export class AuthController {
   @HttpCode(HttpStatus.CREATED)
   async signup(@Body() body: SignupDto) {
     try {
-      await this.authService.signup(body);
+      const user = await this.authService.signup(body);
+      return {
+        username: user.username,
+        name: user.name,
+        email: user.email,
+        address: user.address,
+      };
     } catch (error) {
+      console.error(error);
       if (error instanceof ConflictException) {
         throw new HttpException(
-          'Nome de usuário já existe. Escolha outro, por favor ',
+          {
+            error: 'Nome de usuário já existe. Escolha outro, por favor ',
+          },
           HttpStatus.BAD_REQUEST,
         );
       }
