@@ -12,11 +12,13 @@ import {
 import { AuthService } from './auth.service';
 import { SigninDto } from './dto/signin.dto';
 import { SignupDto } from './dto/signup.dto';
+import { IsPublic } from 'src/common/decorators';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  @IsPublic()
   @Post('signin')
   @HttpCode(HttpStatus.OK)
   async signin(@Body() body: SigninDto) {
@@ -40,6 +42,7 @@ export class AuthController {
     }
   }
 
+  @IsPublic()
   @Post('signup')
   @HttpCode(HttpStatus.CREATED)
   async signup(@Body() body: SignupDto) {
