@@ -28,20 +28,22 @@ export class AuthController {
         error instanceof NotFoundException ||
         error instanceof UnauthorizedException
       ) {
-        throw {
-          error: 'Credenciais inválidas. Nome de Usuário ou Senha não conferem',
-        };
+        throw new HttpException(
+          {
+            error:
+              'Credenciais inválidas. Nome de Usuário ou Senha não conferem',
+          },
+          HttpStatus.BAD_REQUEST,
+        );
       }
     }
   }
 
   @Post('signup')
-  // @HttpCode(HttpStatus.CREATED)
+  @HttpCode(HttpStatus.CREATED)
   async signup(@Body() body: SignupDto) {
     try {
       await this.authService.signup(body);
-      console.log('oioioi');
-      // return;
     } catch (error) {
       if (error instanceof ConflictException) {
         throw new HttpException(
