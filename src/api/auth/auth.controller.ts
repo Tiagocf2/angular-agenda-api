@@ -5,7 +5,9 @@ import {
   HttpCode,
   HttpException,
   HttpStatus,
+  NotFoundException,
   Post,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { SigninDto } from './dto/signin.dto';
@@ -17,8 +19,20 @@ export class AuthController {
 
   @Post('signin')
   @HttpCode(HttpStatus.OK)
-  signin(@Body() body: SigninDto) {
-    return this.authService.signin(body.username, body.password);
+  async signin(@Body() body: SigninDto) {
+    try {
+      const token = await this.authService.signin(body.username, body.password);
+      return { access_token: token };
+    } catch (error) {
+      if (
+        error instanceof NotFoundException ||
+        error instanceof UnauthorizedException
+      ) {
+        throw {
+          error: 'Credenciais inválidas. Nome de Usuário ou Senha não conferem',
+        };
+      }
+    }
   }
 
   @Post('signup')

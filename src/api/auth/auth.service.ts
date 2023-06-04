@@ -4,6 +4,7 @@ import {
   HttpStatus,
   Injectable,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
@@ -19,7 +20,9 @@ export class AuthService {
   async signin(username: string, pwd: string) {
     // Throws NotFoundException
     const user = await this.usersService.findOne({ username });
-    console.log('COMPAROUU:', user.comparePassword(pwd));
+    if (!user.comparePassword(pwd)) throw new UnauthorizedException();
+    const payload = { id: user.id, username: user.username };
+    return await this.jwtService.signAsync(payload);
   }
 
   async signup(signupDto: SignupDto): Promise<void> {
