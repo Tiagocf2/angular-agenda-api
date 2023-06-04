@@ -5,7 +5,7 @@ import { User } from './entities/user.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { UsersRepository } from './users.repository';
-import md5 from 'md5';
+const md5 = require('md5');
 
 @Injectable()
 export class UsersService {
@@ -14,10 +14,10 @@ export class UsersService {
     private usersRepo: UsersRepository,
   ) {}
 
-  async create(createUserDto: CreateUserDto) {
+  async create(createUserDto: CreateUserDto): Promise<User> {
     createUserDto.password = md5(createUserDto.password);
     //TODO: tratar erros
-    await this.usersRepo.create(createUserDto);
+    return await this.usersRepo.create(createUserDto);
   }
 
   findAll() {
