@@ -12,13 +12,16 @@ import { AssistantModule } from './api/assistant/assistant.module';
 import { TasksModule } from './api/tasks/tasks.module';
 
 import MongooseConfiguration from 'src/core/config/mongoose.config';
+import { OpenAiModule } from './api/openai/openai.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true }),
-    MongooseModule.forRootAsync(MongooseConfiguration),
     AuthModule,
     UsersModule,
+    TasksModule,
+    OpenAiModule,
+    ConfigModule.forRoot({ isGlobal: true }),
+    MongooseModule.forRootAsync(MongooseConfiguration),
     RouterModule.register([
       {
         path: 'auth',
@@ -44,7 +47,6 @@ import MongooseConfiguration from 'src/core/config/mongoose.config';
         ],
       },
     ]),
-    TasksModule,
   ],
   controllers: [AppController],
   providers: [AppService],

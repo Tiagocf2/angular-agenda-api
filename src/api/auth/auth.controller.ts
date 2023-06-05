@@ -22,7 +22,7 @@ export class AuthController {
   @IsPublic()
   @Post('signin')
   @HttpCode(HttpStatus.OK)
-  async signin(@Body() body: SigninDto, @Req() request: Request) {
+  async signin(@Body() body: SigninDto) {
     try {
       const payload = await this.authService.signin(
         body.username,

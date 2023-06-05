@@ -1,4 +1,5 @@
 export enum Environment {
   DATABASE_URI = 'DATABASE_URI',
   JWT_SECRET = 'JWT_SECRET',
+  OPENAI_API_KEY = 'OPENAI_API_KEY',
 }
