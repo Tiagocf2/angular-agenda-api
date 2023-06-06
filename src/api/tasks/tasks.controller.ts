@@ -10,6 +10,7 @@ import {
   HttpStatus,
   NotFoundException,
   HttpException,
+  Put,
 } from '@nestjs/common';
 import { TasksService } from './tasks.service';
 import { CreateTaskDto } from './dto/create-task.dto';
@@ -27,8 +28,8 @@ export class TasksController {
   }
 
   @Get()
-  findAll() {
-    return this.tasksService.findAll();
+  findAll(@Param('userId') userId) {
+    return this.tasksService.findAll(userId);
   }
 
   @Get(':id')
@@ -43,7 +44,7 @@ export class TasksController {
     }
   }
 
-  @Patch(':id')
+  @Put(':id')
   update(@Param('id') id: string, @Body() updateTaskDto: UpdateTaskDto) {
     return this.tasksService.update(id, updateTaskDto);
   }

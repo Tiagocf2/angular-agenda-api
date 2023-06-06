@@ -32,7 +32,7 @@ import { OpenAiModule } from './api/openai/openai.module';
         module: UsersModule,
         children: [
           {
-            path: ':id',
+            path: ':userId',
             children: [
               {
                 path: 'chat',

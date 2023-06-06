@@ -15,8 +15,13 @@ export class TasksRepository {
     return task.save();
   }
 
-  list(): Promise<TaskDocument[]> {
-    return this.taskModel.find().exec();
+  listByUser(userId: string): Promise<TaskDocument[]> {
+    return this.taskModel
+      .find({
+        user: userId,
+        status: { $ne: TaskStatus.INACTIVE.toString() },
+      })
+      .exec();
   }
 
   findById(id: string): Promise<TaskDocument | undefined> {

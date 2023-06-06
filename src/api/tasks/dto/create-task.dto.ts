@@ -23,6 +23,5 @@ export class CreateTaskDto {
   priority: TaskPriority;
 
   @IsOptional()
-  @ArrayNotEmpty()
   tags: string[];
 }

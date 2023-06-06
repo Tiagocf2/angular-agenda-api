@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Body, Controller, Get, Post, Req } from '@nestjs/common';
 import { OpenAiService } from './openai.service';
 
 @Controller('openai')
@@ -10,14 +10,8 @@ export class OpenAiController {
     return this.openaiService.listModels();
   }
 
-  @Get('ping')
-  testOpenai() {
-    return this.openaiService.requestPrompt(
-      // { text: 'say pong' },
-      {
-        text: 'criar uma nova tarefa',
-      },
-      // { max_tokens: 3 },
-    );
+  @Post()
+  chat(@Body() body: { text: string; name: string }) {
+    return this.openaiService.requestPrompt(body);
   }
 }

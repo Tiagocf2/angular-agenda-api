@@ -27,6 +27,8 @@ export class UsersRepository {
   }
 
   update(id: string, updateUserDto: UpdateUserDto) {
-    return this.userModel.findOneAndUpdate({ _id: id }, updateUserDto);
+    return this.userModel.findOneAndUpdate({ _id: id }, updateUserDto, {
+      new: true,
+    });
   }
 }

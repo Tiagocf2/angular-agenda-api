@@ -10,14 +10,16 @@ export class TasksService {
   constructor(private taskRepo: TasksRepository) {}
 
   create(createTaskDto: CreateTaskDto): Promise<Task> {
-    createTaskDto.tags = removeDuplicatesFromArray(
-      createTaskDto.tags.map((e) => e.toLowerCase()),
-    );
+    if (!!createTaskDto.tags?.length) {
+      createTaskDto.tags = removeDuplicatesFromArray(
+        createTaskDto.tags.map((e) => e.toLowerCase()),
+      );
+    }
     return this.taskRepo.create(createTaskDto);
   }
 
-  findAll(): Promise<Task[]> {
-    return this.taskRepo.list();
+  findAll(userId: string): Promise<Task[]> {
+    return this.taskRepo.listByUser(userId);
   }
 
   async findOne(id: string): Promise<Task> {
@@ -27,9 +29,11 @@ export class TasksService {
   }
 
   async update(id: string, updateTaskDto: UpdateTaskDto): Promise<Task> {
-    updateTaskDto.tags = removeDuplicatesFromArray(
-      updateTaskDto.tags.map((e) => e.toLowerCase()),
-    );
+    if (!!updateTaskDto.tags?.length) {
+      updateTaskDto.tags = removeDuplicatesFromArray(
+        updateTaskDto.tags.map((e) => e.toLowerCase()),
+      );
+    }
     const task = await this.taskRepo.update(id, updateTaskDto);
     if (!task) throw new NotFoundException();
     return task;
