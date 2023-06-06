@@ -22,7 +22,9 @@ export class AuthService {
     const user = await this.usersService.findOne({ username });
     if (user.password !== md5(pwd)) throw new UnauthorizedException();
     const payload = { id: user.id, username: user.username };
-    const token = await this.jwtService.signAsync(payload);
+    const token = await this.jwtService.signAsync(payload, {
+      expiresIn: '30d',
+    });
     return { token, user: payload };
   }
 
