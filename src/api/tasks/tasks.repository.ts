@@ -5,6 +5,7 @@ import { Task, TaskDocument } from './entities/task.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { TaskStatus } from './enums/task-status.enum';
+import { ListTaskQueryDto } from './dto/list-task.dto';
 
 @Injectable()
 export class TasksRepository {
@@ -15,12 +16,50 @@ export class TasksRepository {
     return task.save();
   }
 
-  listByUser(userId: string): Promise<TaskDocument[]> {
+  listByUser(userId: string, query: ListTaskQueryDto): Promise<TaskDocument[]> {
+    const queries = <any>[];
+    if (query.status) {
+      queries.push({ status: query.status });
+    } else {
+      queries.push({ status: { $ne: TaskStatus.INACTIVE.toString() } });
+    }
+
+    if (query.priority) {
+      queries.push({ priority: query.priority });
+    }
+
+    if (query.search) {
+      queries.push({
+        $or: [
+          { title: { $regex: new RegExp(queries.search, 'i') } },
+          { description: { $regex: new RegExp(queries.search, 'i') } },
+        ],
+      });
+    }
+
+    return this.taskModel
+      .find({
+        $and: [{ user: userId }, ...queries],
+      })
+      .exec();
+  }
+
+  getAmountByStatus(userId: string, status: TaskStatus): Promise<number> {
     return this.taskModel
       .find({
         user: userId,
-        status: { $ne: TaskStatus.INACTIVE.toString() },
+        status: status.toString(),
       })
+      .count()
+      .exec();
+  }
+
+  getAmount(userId: string): Promise<number> {
+    return this.taskModel
+      .find({
+        user: userId,
+      })
+      .count()
       .exec();
   }
 

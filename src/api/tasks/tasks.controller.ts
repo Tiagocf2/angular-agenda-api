@@ -3,7 +3,6 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
   Delete,
   HttpCode,
@@ -11,11 +10,12 @@ import {
   NotFoundException,
   HttpException,
   Put,
+  Query,
 } from '@nestjs/common';
 import { TasksService } from './tasks.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
-import { Task } from './entities/task.schema';
+import { ListTaskQueryDto } from './dto/list-task.dto';
 
 @Controller()
 export class TasksController {
@@ -28,8 +28,13 @@ export class TasksController {
   }
 
   @Get()
-  findAll(@Param('userId') userId) {
-    return this.tasksService.findAll(userId);
+  findAll(@Param('userId') userId, @Query() query: ListTaskQueryDto) {
+    return this.tasksService.findAll(userId, query);
+  }
+
+  @Get('stats')
+  async stats(@Param('userId') userId: string) {
+    return await this.tasksService.getStats(userId);
   }
 
   @Get(':id')

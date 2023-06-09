@@ -3,7 +3,9 @@ import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { TasksRepository } from './tasks.repository';
 import { removeDuplicatesFromArray } from 'src/utils/helpers';
-import { Task } from './entities/task.schema';
+import { Task, TaskDocument } from './entities/task.schema';
+import { TaskStatus } from './enums/task-status.enum';
+import { ListTaskQueryDto } from './dto/list-task.dto';
 
 @Injectable()
 export class TasksService {
@@ -18,8 +20,17 @@ export class TasksService {
     return this.taskRepo.create(createTaskDto);
   }
 
-  findAll(userId: string): Promise<Task[]> {
-    return this.taskRepo.listByUser(userId);
+  findAll(userId: string, query: ListTaskQueryDto): Promise<Task[]> {
+    return this.taskRepo.listByUser(userId, query);
+  }
+
+  async getStats(userId: string): Promise<{ [key: string]: number }> {
+    const doneAmount = await this.taskRepo.getAmountByStatus(
+      userId,
+      TaskStatus.DONE,
+    );
+    const totalAmount = await this.taskRepo.getAmount(userId);
+    return { done: doneAmount, total: totalAmount };
   }
 
   async findOne(id: string): Promise<Task> {
