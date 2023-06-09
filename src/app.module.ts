@@ -8,7 +8,6 @@ import { RouterModule } from '@nestjs/core';
 
 import { AuthModule } from './api/auth/auth.module';
 import { UsersModule } from './api/users/users.module';
-import { AssistantModule } from './api/assistant/assistant.module';
 import { TasksModule } from './api/tasks/tasks.module';
 
 import MongooseConfiguration from 'src/core/config/mongoose.config';
@@ -34,10 +33,6 @@ import { OpenAiModule } from './api/openai/openai.module';
           {
             path: ':userId',
             children: [
-              {
-                path: 'chat',
-                module: AssistantModule,
-              },
               {
                 path: 'tasks',
                 module: TasksModule,
