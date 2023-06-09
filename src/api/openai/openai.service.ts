@@ -7,6 +7,7 @@ import {
   // AI_PROMPT_TEXT_IDENTIFIER,
   AI_PROMPT_USER_MAX_SIZE,
 } from './constants/ai-prompt.constants';
+import { DEFAULT_MESSAGE_PROMPT } from './ai-prompts';
 // import { DEFAULT_PROMPT } from './ai-prompts';
 
 const defaultRequestOptions: CreateCompletionRequest = {
@@ -41,6 +42,7 @@ export class OpenAiService {
         ...defaultRequestOptions,
         ...(options || {}),
         messages: [
+          { role: 'system', content: DEFAULT_MESSAGE_PROMPT },
           {
             role: 'user',
             name: formattedPrompt.name,
@@ -50,7 +52,7 @@ export class OpenAiService {
       });
       return { text: response.data.choices[0].message.content };
     } catch (error) {
-      console.log(error);
+      console.error(error);
       throw error;
     }
   }
